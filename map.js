@@ -24,6 +24,20 @@ Node.prototype.getEdgeWeight = function(nodeId) {
   return this.edges[nodeId].weight;
 };
 
+Node.prototype.getEdges = function() {
+  var keys = Object.keys(this.edges),
+      self = this;
+
+  if(keys.length === 0) return [];
+
+  return keys.map( function(key) {
+    return self.edges[key];
+  });
+};
+
+var PriorityQueue = require('./priority-queue'),
+    AugArray      = require('./augArray');
+
 module.exports = function(){
 
   var cities = {};
@@ -41,54 +55,53 @@ module.exports = function(){
 
   var findPath = function(nodeIdA, nodeIdB) {
 
-    var nodeA   = cities[nodeIdA],
-        nodeB   = cities[nodeIdB],
-        path    = [];
+    var solved     = new AugArray(),
+        startNode  = cities[nodeIdA],
+        finishNode = cities[nodeIdB],
+        discovered = new PriorityQueue();
 
-    if(!nodeA || !nodeB) {
+    if(!startNode || !finishNode) {
       return null;
     }
 
-    if(nodeA.id === nodeB.id) {
+    if(startNode.id === finishNode.id) {
       return 0;
     }
 
-    return _findPath(nodeA, nodeIdB, path);
+    discovered.add(startNode, 0);
+
+    return _findPath(solved, discovered, nodeIdB);
+
   };
 
-  var _findPath = function(currNode, searchNodeId, path) {
+  var _findPath = function(solved, discovered, searchTerm) {
 
-    var weight       = null,
-        edgeIds    = Object.keys(currNode.edges),
-        numEdges  = edgeIds.length,
-        i,
-        edge;
+    var next       = discovered.removeMin(),
+        pathWeight = null,
+        edges   = [];
 
-    path.push(currNode.id);
-
-    if(currNode.isConnected(searchNodeId)) {
-      return currNode.getEdgeWeight(searchNodeId);
+    while(next && solved.includes(next.node.id)) {
+      next = discovered.removeMin();
     }
 
-    for(i = 0; i < numEdges; i++) {
-      edge = currNode.edges[edgeIds[i]];
-      // Ignore any node already in our path
-      if(path.indexOf(edge.node.id) !== -1 ) {
-        continue;
+    while(next) {
+      solved.push(next.node.id);
+      pathWeight = next.distance;
+      edges = next.node.getEdges();
+
+      edges.forEach( function(edge) {
+        discovered.add(edge.node, pathWeight + edge.weight);
+      });
+
+      next = discovered.removeMin();
+      while(next && solved.includes(next.node.id)) {
+        next = discovered.removeMin();
       }
 
-      // Recurse
-      weight = _findPath(edge.node, searchNodeId, path);
+      if(next && next.node.id === searchTerm) {
+        return next.distance;
+      }
 
-      // If weight is null, we didn't find the node.  Need to
-      // reset the path to strip of nodes added during the
-      // recursive call
-      if(!weight) {
-        path = path.slice(0, path.indexOf(currNode.id) + 1);
-      }
-      else {
-        return weight + currNode.getEdgeWeight(edge.node.id);
-      }
     }
 
     return null;
