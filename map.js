@@ -1,4 +1,4 @@
-var Vertex = function(node, weight) {
+var Edge = function(node, weight) {
   this.node     = node;
   this.weight   = weight;
 };
@@ -6,22 +6,22 @@ var Vertex = function(node, weight) {
 var Node = function(name) {
 
   this.id         = name;
-  this.vertices   = {};
+  this.edges   = {};
 
 };
 
-Node.prototype.addVertex = function(node, weight) {
-  var vertex = new Vertex(node, weight);
-  this.vertices[node.id] = vertex;
+Node.prototype.addEdge = function(node, weight) {
+  var edge = new Edge(node, weight);
+  this.edges[node.id] = edge;
   return this;
 };
 
 Node.prototype.isConnected = function(nodeId) {
-  return this.vertices[nodeId] != null;
+  return this.edges[nodeId] != null;
 };
 
-Node.prototype.getVertexWeight = function(nodeId) {
-  return this.vertices[nodeId].weight;
+Node.prototype.getEdgeWeight = function(nodeId) {
+  return this.edges[nodeId].weight;
 };
 
 module.exports = function(){
@@ -59,26 +59,26 @@ module.exports = function(){
   var _findPath = function(currNode, searchNodeId, path) {
 
     var weight       = null,
-        vertexIds    = Object.keys(currNode.vertices),
-        numVertices  = vertexIds.length,
+        edgeIds    = Object.keys(currNode.edges),
+        numEdges  = edgeIds.length,
         i,
-        vertex;
+        edge;
 
     path.push(currNode.id);
 
     if(currNode.isConnected(searchNodeId)) {
-      return currNode.getVertexWeight(searchNodeId);
+      return currNode.getEdgeWeight(searchNodeId);
     }
 
-    for(i = 0; i < numVertices; i++) {
-      vertex = currNode.vertices[vertexIds[i]];
+    for(i = 0; i < numEdges; i++) {
+      edge = currNode.edges[edgeIds[i]];
       // Ignore any node already in our path
-      if(path.indexOf(vertex.node.id) !== -1 ) {
+      if(path.indexOf(edge.node.id) !== -1 ) {
         continue;
       }
 
       // Recurse
-      weight = _findPath(vertex.node, searchNodeId, path);
+      weight = _findPath(edge.node, searchNodeId, path);
 
       // If weight is null, we didn't find the node.  Need to
       // reset the path to strip of nodes added during the
@@ -87,7 +87,7 @@ module.exports = function(){
         path = path.slice(0, path.indexOf(currNode.id) + 1);
       }
       else {
-        return weight + currNode.getVertexWeight(vertex.node.id);
+        return weight + currNode.getEdgeWeight(edge.node.id);
       }
     }
 
@@ -104,8 +104,8 @@ module.exports = function(){
       return false;
     }
 
-    nodeA.addVertex(nodeB, weight);
-    nodeB.addVertex(nodeA, weight);
+    nodeA.addEdge(nodeB, weight);
+    nodeB.addEdge(nodeA, weight);
     return true;
 
   };
