@@ -35,7 +35,7 @@ Node.prototype.getEdges = function() {
   });
 };
 
-var PriorityQueue = require('./priority-queue-array'),
+var PriorityQueue = require('./priority-queue'),
     AugArray      = require('./augArray');
 
 module.exports = function(){
