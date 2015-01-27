@@ -1,8 +1,7 @@
-// Just an augmented array.  There were operations I was
-// going to be doing a lot on a regular array so, rather
-// than messing with the built in type, I thought I'd 
-// make my modifications to the array I'm going to be
-// using.
+// Wanted to add an include method to an array I was going to be using
+// but didn't want to mess with the built in type.  Also wanted to
+// preserve the semantics of writing if(array.includes(element))
+// rather than using something like 'call'
 
 module.exports = function() {
 
