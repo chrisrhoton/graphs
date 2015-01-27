@@ -4,13 +4,13 @@ describe("PriorityQueue", function(){
   describe("removeMin", function(){
     beforeEach(function(done){
       this.queue = new PriorityQueue();
-      this.queue.add("c1", 5);
-      this.queue.add("c2", 8);
-      this.queue.add("c3", 10);
-      this.queue.add("c4", 4);
-      this.queue.add("c5", 2);
-      this.queue.add("c6", 9);
-      this.queue.add("c1", 3);
+      this.queue.insert("c1", 5);
+      this.queue.insert("c2", 8);
+      this.queue.insert("c3", 10);
+      this.queue.insert("c4", 4);
+      this.queue.insert("c5", 2);
+      this.queue.insert("c6", 9);
+      this.queue.insert("c1", 3);
       done();
     });
 

@@ -4,7 +4,7 @@ module.exports = function() {
 
   // Using distance here to mean the total
   // cost to reach this node.
-  var add = function(node, distance) {
+  var insert = function(node, distance) {
 
   };
 
@@ -13,7 +13,7 @@ module.exports = function() {
   }
 
   return {
-    add: add,
+    insert: insert,
     removeMin: removeMin
   }
 

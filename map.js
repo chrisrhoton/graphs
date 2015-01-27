@@ -68,7 +68,7 @@ module.exports = function(){
       return 0;
     }
 
-    discovered.add(startNode, 0);
+    discovered.insert(startNode, 0);
 
     return _findPath(solved, discovered, nodeIdB);
 
@@ -90,7 +90,7 @@ module.exports = function(){
       edges = next.node.getEdges();
 
       edges.forEach( function(edge) {
-        discovered.add(edge.node, pathWeight + edge.weight);
+        discovered.insert(edge.node, pathWeight + edge.weight);
       });
 
       next = discovered.removeMin();
