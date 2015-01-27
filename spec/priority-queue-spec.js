@@ -1,4 +1,4 @@
-var PriorityQueue = require("../priority-queue");
+var PriorityQueue = require("../priority-queue-array");
 
 describe("PriorityQueue", function(){
   describe("removeMin", function(){
